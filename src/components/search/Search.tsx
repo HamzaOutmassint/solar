@@ -7,8 +7,8 @@ const Search = () => {
 
     return <Input 
                 value={search} 
-                onChange={(e)=>setSearch(e.target.value)} 
                 placeholder="Search an Address"
+                onChange={(e)=>setSearch(e.target.value)} 
             />
 }
 

@@ -79,8 +79,7 @@ function App() {
         <a
           className="primary-text"
           href="https://developers.google.com/maps/documentation/solar/overview?hl=en"
-          target="_blank"
-          rel="noreferrer"
+          target="_blank" rel="noreferrer"
           >Two distinct endpoints of the <span>Solar API </span></a>
           offer many benefits to solar marketplace websites, solar installers, and solar SaaS designers.
           Click on an area below to see what type of information the Solar API can provide.

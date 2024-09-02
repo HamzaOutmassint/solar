@@ -3,7 +3,7 @@
     .accordion__header{
         padding: 16px 0 ;
 
-        .accordion__header-title{
+        .accordion__header_title{
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -31,7 +31,6 @@
         padding: 0px 10px;
 
         &.toggel{
-            background-color: aqua;
             border-bottom: 1.5px solid #86717175;
             height: 140px;
         }

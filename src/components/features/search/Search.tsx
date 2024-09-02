@@ -1,6 +1,6 @@
 
 import React, { useEffect, useRef, useState } from 'react';
-import "./search.scss"
+import styles from "./search.module.scss"
 
 interface SearchBarProps {
   location: google.maps.LatLng | undefined;
@@ -52,13 +52,13 @@ const Search: React.FC<SearchBarProps> = ({ location, setLocation, placesLibrary
   };
 
   return (
-      <main className='inputField'>
+      <main className={styles.inputField}>
           <input 
               type="text" 
               ref={inputRef} 
               value={searchValue} 
               onChange={handleInputChange} 
-              className='searchInput'
+              className={styles.searchInput}
               placeholder=''
           />
           <span>Search an Address</span>

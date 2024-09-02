@@ -1,10 +1,12 @@
 import { ChevronDown, ChevronUp, House } from "lucide-react";
 import { useState } from "react";
 
-import { BuildingInsightsResponse } from "../types/solar";
-import { findSolarConfig } from "../types/utils";
+import { BuildingInsightsResponse } from "../../../types/solar";
+import { findSolarConfig } from "../../../utils/utils";
 
-import"./sections.scss"
+import styles from "./sections.module.scss"
+import InputPanelsCount from "../../common/inputPanelsCount/InputPanelsCount";
+
 
 interface sectionsProps {
     location : google.maps.LatLng ;
@@ -20,9 +22,9 @@ const Sections = ({ location , map , geometryLibrary , googleMapsApiKey}: sectio
   
 
   return (
-    <div className="accordion">
-        <div onClick={()=>setAccordionStates(!accordionStates)} style={{cursor: "pointer"}} className="accordion__header">
-            <div className="accordion__header-title">
+    <div className={styles.accordion}>
+        <div onClick={()=>setAccordionStates(!accordionStates)} style={{cursor: "pointer"}} className={styles.accordion__header}>
+            <div className={styles.accordion__header_title}>
                 <h1><House /> <span>Building Insights Section</span></h1>
                 {
                     accordionStates ? <ChevronDown /> : <ChevronUp />
@@ -31,11 +33,8 @@ const Sections = ({ location , map , geometryLibrary , googleMapsApiKey}: sectio
             </div>
             <span>Yearly energy: 19.83 MWh</span>
         </div>
-        <div className={` ${ accordionStates ? 'toggel' : ''} accordion__content`}>
-            <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio placeat, ratione eius id iste facilis, dolorum cumque unde veritatis praesentium, 
-                consequuntur distinctio molestias. Excepturi illo corrupti libero voluptatum corporis sint ullam dicta vel quaerat fuga,
-            </p>
+        <div className={` ${ accordionStates ? styles.toggel : ''} ${styles.accordion__content}`}>
+           <InputPanelsCount />
         </div>
     </div>
   );

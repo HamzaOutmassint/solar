@@ -12,9 +12,9 @@
 
     .appContainer__sidebar{
         width: 24rem;
-        padding: 8px;
+        padding: 16px 8px;
 
-        &-description{ 
+        &_description{ 
             padding: 16px 10px;
             background-color: #E7E0EC;
             border-radius: 8px;
@@ -33,7 +33,6 @@
 
             p{
                 font-weight: 500;
-                margin-top: 8px;
             }
         }
     }

@@ -1,10 +1,11 @@
 import * as GMAPILoader from '@googlemaps/js-api-loader';
 import { useEffect, useRef, useState } from 'react';
-import Search from './components/search/Search';
 import { ExternalLink } from 'lucide-react';
-import Sections from './sections/Sections';
+import styles from "./App.module.scss"
 
-import "./App.scss";
+import Search from './components/features/search/Search';
+import Sections from './components/features/sections/Sections';
+
 
 const { Loader } = GMAPILoader;
 
@@ -72,10 +73,10 @@ function App() {
   
 
   return (
-    <div className="appContainer">
-      <div className="appContainer__map" ref={mapElement} />
+    <div className={styles.appContainer}>
+      <div className={styles.appContainer__map} ref={mapElement} />
 
-      <aside className="appContainer__sidebar">
+      <aside className={styles.appContainer__sidebar}>
         <Search 
           placesLibrary={placesLibrary}
           location={location}
@@ -84,19 +85,6 @@ function App() {
           initialValue={defaultPlace.name}
           zoom={zoom}
         />
-
-        <div className='appContainer__sidebar-description'>
-          <a
-            className="primary-text"
-            href="https://developers.google.com/maps/documentation/solar/overview?hl=en"
-            target="_blank" rel="noreferrer"
-          >
-            Two distinct endpoints of the <span>Solar API <ExternalLink size={15} /> </span>
-          </a>
-          offer many benefits to solar marketplace websites, solar installers, and solar SaaS designers.
-          <p>Click on an area below to see what type of information the Solar API can provide.</p>
-        </div>
-
         {
           location && <Sections 
                         location={location}
@@ -105,7 +93,18 @@ function App() {
                         googleMapsApiKey={googleMapsApiKey}
                       />
         }
-
+        <div className={styles.appContainer__sidebar_description}>
+          <p>You can visit 
+            <a
+              className="primary-text"
+              href="https://developers.google.com/maps/documentation/solar/overview?hl=en"
+              target="_blank" rel="noreferrer"
+            >
+              <span> Solar API <ExternalLink size={15} /> </span>
+            </a>
+            to see what type of information the Solar API can provide.
+          </p>
+        </div>
       </aside>
     </div>
   )

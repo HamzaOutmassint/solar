@@ -2,7 +2,7 @@ import "./input.scss"
 
 interface inputType {
     type? : string 
-    value? : string,
+    value? : string | number,
     onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
     ref?: React.RefObject<HTMLInputElement>;
     placeholder? : string
@@ -11,7 +11,7 @@ interface inputType {
 }
 
 
-const Input = ({ type="text" , value, onChange , placeholder, ref , id , className } : inputType ) => {
+const Input = ({ type="text" , value="", onChange , placeholder, ref , id , className } : inputType ) => {
   return (
     <main className='inputField'>
         <input 

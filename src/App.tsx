@@ -1,8 +1,10 @@
 import * as GMAPILoader from '@googlemaps/js-api-loader';
 import { useEffect, useRef, useState } from 'react';
-import "./App.scss";
 import Search from './components/search/Search';
 import { ExternalLink } from 'lucide-react';
+import Sections from './sections/Sections';
+
+import "./App.scss";
 
 const { Loader } = GMAPILoader;
 
@@ -80,6 +82,7 @@ function App() {
           setLocation={setLocation}
           map={map}
           initialValue={defaultPlace.name}
+          zoom={zoom}
         />
 
         <div className='appContainer__sidebar-description'>
@@ -93,6 +96,16 @@ function App() {
           offer many benefits to solar marketplace websites, solar installers, and solar SaaS designers.
           <p>Click on an area below to see what type of information the Solar API can provide.</p>
         </div>
+
+        {
+          location && <Sections 
+                        location={location}
+                        map={map}
+                        geometryLibrary={geometryLibrary}
+                        googleMapsApiKey={googleMapsApiKey}
+                      />
+        }
+
       </aside>
     </div>
   )

@@ -8,15 +8,15 @@ interface SearchBarProps {
   placesLibrary: google.maps.PlacesLibrary | null;
   map: google.maps.Map | undefined;
   initialValue: string;
-  zoom?: number;
+  zoom: number;
 }
 
-const Search: React.FC<SearchBarProps> = ({ location, setLocation, placesLibrary, map, initialValue, zoom = 19 }) => {
+const Search: React.FC<SearchBarProps> = ({ location, setLocation, placesLibrary, map, initialValue, zoom }) => {
   const [searchValue, setSearchValue] = useState(initialValue);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    
+
     // Wait until the input is mounted and then create the autocomplete instance.
     if (inputRef.current && placesLibrary !== null && map !== undefined) {
       const autocomplete = new placesLibrary.Autocomplete(inputRef.current, {
@@ -34,6 +34,7 @@ const Search: React.FC<SearchBarProps> = ({ location, setLocation, placesLibrary
         // Set the map to the selected place's location.
         if (place.geometry.viewport) {
           map.fitBounds(place.geometry.viewport);
+          map.setZoom(zoom);
         } else {
           map.setCenter(place.geometry.location);
           map.setZoom(zoom);
@@ -50,22 +51,19 @@ const Search: React.FC<SearchBarProps> = ({ location, setLocation, placesLibrary
     setSearchValue(event.target.value);
   };
 
-
-    return (
-        <main className='inputField'>
-            <input 
-                type="text" 
-                ref={inputRef} 
-                value={searchValue} 
-                onChange={handleInputChange} 
-                className='searchInput'
-                placeholder=''
-            />
-            <span>Search an Address</span>
-        </main>
-    )
-
-        
+  return (
+      <main className='inputField'>
+          <input 
+              type="text" 
+              ref={inputRef} 
+              value={searchValue} 
+              onChange={handleInputChange} 
+              className='searchInput'
+              placeholder=''
+          />
+          <span>Search an Address</span>
+      </main>
+  )
 }
 
 export default Search

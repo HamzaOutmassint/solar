@@ -1,0 +1,39 @@
+
+.accordion{
+    .accordion__header{
+        padding: 16px 0 ;
+
+        .accordion__header-title{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #6750a4;
+
+            h1{
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 18px;
+            }
+        }
+
+        & > span{
+            color: #7A757F;
+            font-size: 13px;
+            margin-left: 33px;
+        }
+    }
+
+    .accordion__content{
+        height: 0;
+        overflow: hidden;
+        transition: all ease .3s;
+        padding: 0px 10px;
+
+        &.toggel{
+            background-color: aqua;
+            border-bottom: 1.5px solid #86717175;
+            height: 140px;
+        }
+    }
+}

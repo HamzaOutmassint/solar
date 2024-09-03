@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
-// import { SolarPanelConfig } from '../../types/solar';
+import { SolarPanelConfig } from '../../../types/solar';
 import { Sun } from 'lucide-react';
 
 import styles from "./inputPanelsCount.module.scss"
 
-const SolarPanelCount = () => {
-  const [configId, setConfigId] = useState<number>(0);
+
+interface solarPanelCountProps {
+  configId : number | undefined;
+  setConfigId: React.Dispatch<React.SetStateAction<number | undefined>>;
+  solarPanelConfigs : SolarPanelConfig[];
+}
+
+const SolarPanelCount = ({ configId, setConfigId , solarPanelConfigs }: solarPanelCountProps ) => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setConfigId(parseInt(event.target.value, 10));
@@ -19,11 +25,22 @@ const SolarPanelCount = () => {
             <span>Panels count</span>
         </div>
         <div className={styles.header_right}>
-            250 panels
+            {
+              configId !== undefined  && (
+                `${solarPanelConfigs[configId].panelsCount} panels`
+              )
+            }
         </div>
       </div>
 
-      <input type="range" min="0" max="200" value={configId} className={styles.inputPanelsCount}  onChange={(e)=>handleChange(e)}/>
+      <input 
+        type="range" 
+        min={0}
+        max={solarPanelConfigs.length - 1} 
+        value={configId} 
+        className={styles.inputPanelsCount}  
+        onChange={(e)=>handleChange(e)}
+      />
     </div>
   );
 };

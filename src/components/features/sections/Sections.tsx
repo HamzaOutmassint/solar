@@ -1,41 +1,104 @@
-import { ChevronDown, ChevronUp, House } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from 'react';
+import { BuildingInsightsResponse } from '../../../types/solar'; 
+import { findSolarConfig } from '../../../utils/utils';
 
-import { BuildingInsightsResponse } from "../../../types/solar";
-import { findSolarConfig } from "../../../utils/utils";
+import BuildingInsightsSection from './buildingInsightsSection/BuildingInsightsSection';
+// import DataLayersSection from './DataLayersSection';
+// import SolarPotentialSection from './SolarPotentialSection';
 
-import styles from "./sections.module.scss"
-import InputPanelsCount from "../../common/inputPanelsCount/InputPanelsCount";
-
-
-interface sectionsProps {
-    location : google.maps.LatLng ;
-    map : google.maps.Map | undefined;
-    geometryLibrary : google.maps.GeometryLibrary | null;
-    googleMapsApiKey : string ;
+interface SolarComponentProps {
+  location: google.maps.LatLng;
+  map: google.maps.Map | undefined;
+  geometryLibrary: google.maps.GeometryLibrary | null;
+  googleMapsApiKey: string;
 }
 
-let buildingInsights: BuildingInsightsResponse | undefined;
+const Sections: React.FC<SolarComponentProps> = ({ location, map, geometryLibrary, googleMapsApiKey }) => {
+  const [buildingInsights, setBuildingInsights] = useState<BuildingInsightsResponse | undefined>(undefined);
+  const [expandedSection, setExpandedSection] = useState<string>('');
+  const [showPanels, setShowPanels] = useState<boolean>(true);
+  const [monthlyAverageEnergyBillInput, setMonthlyAverageEnergyBillInput] = useState<number>(300);
+  const [panelCapacityWattsInput, setPanelCapacityWattsInput] = useState<number>(250);
+  const [energyCostPerKwhInput, setEnergyCostPerKwhInput] = useState<number>(0.31);
+  const [dcToAcDerateInput, setDcToAcDerateInput] = useState<number>(0.85);
+  const [yearlyKwhEnergyConsumption, setYearlyKwhEnergyConsumption] = useState<number>(0);
+  const [configId, setConfigId] = useState<number | undefined>(undefined);
 
-const Sections = ({ location , map , geometryLibrary , googleMapsApiKey}: sectionsProps) => {
-    const [accordionStates, setAccordionStates] = useState(false);
-  
+  // Compute yearly energy consumption
+  useEffect(() => {
+    const consumption = (monthlyAverageEnergyBillInput / energyCostPerKwhInput) * 12;
+    setYearlyKwhEnergyConsumption(consumption);
+  }, [monthlyAverageEnergyBillInput, energyCostPerKwhInput]);
+
+  // Update configId if necessary
+  useEffect(() => {
+    if (configId === undefined && buildingInsights) {
+      const defaultPanelCapacity = buildingInsights.solarPotential.panelCapacityWatts;
+      const panelCapacityRatio = panelCapacityWattsInput / defaultPanelCapacity;
+      const newConfigId = findSolarConfig(
+        buildingInsights.solarPotential.solarPanelConfigs,
+        yearlyKwhEnergyConsumption,
+        panelCapacityRatio,
+        dcToAcDerateInput
+      );
+      setConfigId(newConfigId);
+    }
+  }, [buildingInsights, configId, panelCapacityWattsInput, yearlyKwhEnergyConsumption, dcToAcDerateInput]);
 
   return (
-    <div className={styles.accordion}>
-        <div onClick={()=>setAccordionStates(!accordionStates)} style={{cursor: "pointer"}} className={styles.accordion__header}>
-            <div className={styles.accordion__header_title}>
-                <h1><House /> <span>Building Insights Section</span></h1>
-                {
-                    accordionStates ? <ChevronDown /> : <ChevronUp />
-                }
-                
-            </div>
-            <span>Yearly energy: 19.83 MWh</span>
-        </div>
-        <div className={` ${ accordionStates ? styles.toggel : ''} ${styles.accordion__content}`}>
-           <InputPanelsCount />
-        </div>
+    <div className="flex flex-col rounded-md shadow-md">
+      {geometryLibrary && map && (
+        <BuildingInsightsSection
+          expandedSection={expandedSection}
+          setExpandedSection={setExpandedSection}
+          buildingInsights={buildingInsights}
+          setBuildingInsights={setBuildingInsights}
+          configId={configId}
+          setConfigId={setConfigId}
+          showPanels={showPanels}
+          setShowPanels={setShowPanels}
+          panelCapacityWatts={panelCapacityWattsInput}
+          setPanelCapacityWatts={setPanelCapacityWattsInput}
+          googleMapsApiKey={googleMapsApiKey}
+          geometryLibrary={geometryLibrary}
+          location={location}
+          map={map}
+        />
+      )}
+
+      {/* {buildingInsights && configId !== undefined && (
+        <>
+          <hr className="md-divider inset" />
+          <DataLayersSection
+            expandedSection={expandedSection}
+            setExpandedSection={setExpandedSection}
+            showPanels={showPanels}
+            setShowPanels={setShowPanels}
+            googleMapsApiKey={googleMapsApiKey}
+            buildingInsights={buildingInsights}
+            geometryLibrary={geometryLibrary}
+            map={map}
+          />
+
+          <hr className="md-divider inset" />
+          <SolarPotentialSection
+            expandedSection={expandedSection}
+            setExpandedSection={setExpandedSection}
+            configId={configId}
+            setConfigId={setConfigId}
+            monthlyAverageEnergyBillInput={monthlyAverageEnergyBillInput}
+            setMonthlyAverageEnergyBillInput={setMonthlyAverageEnergyBillInput}
+            energyCostPerKwhInput={energyCostPerKwhInput}
+            setEnergyCostPerKwhInput={setEnergyCostPerKwhInput}
+            panelCapacityWattsInput={panelCapacityWattsInput}
+            setPanelCapacityWattsInput={setPanelCapacityWattsInput}
+            dcToAcDerateInput={dcToAcDerateInput}
+            setDcToAcDerateInput={setDcToAcDerateInput}
+            solarPanelConfigs={buildingInsights.solarPotential.solarPanelConfigs}
+            defaultPanelCapacityWatts={buildingInsights.solarPotential.panelCapacityWatts}
+          />
+        </>
+      )} */}
     </div>
   );
 };

@@ -1,0 +1,50 @@
+
+
+.container{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .lable{
+        color:#6750a4;
+        font-weight: 600;
+    }
+}
+
+.on_off_switch{
+    width: 60px;
+    height: 30px;
+    border-radius: 20px;
+    position: relative;
+    cursor: pointer;
+
+    &.on{
+        background-color: #6750a4;
+        border: 2px solid #6750a4;
+    }
+
+    &.off{
+        background-color: #fff;
+        border: 2px solid #b9b0b0;
+    }
+
+    .slider {
+        position: absolute;
+        top: 0px;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        transition: left 0.3s ease;
+
+        &.on {
+            left: 30px;
+            background-color: #f7f7f7;
+        }
+          
+        &.off {
+            left: .5px;
+            background-color: #6750a4;
+        }
+      }
+    
+}

@@ -13,8 +13,6 @@ import ShowPanels from "./../../../common/showPanels/ShowPanels";
 
 
 const BuildingInsightsSection = ({ 
-  expandedSection, 
-  setExpandedSection, 
   buildingInsights, 
   setBuildingInsights, 
   configId, 
@@ -31,7 +29,7 @@ const BuildingInsightsSection = ({
   const [accordionStates, setAccordionStates] = useState(false);
   const [requestSent, setRequestSent] = useState(false);
   const [requestError, setRequestError] = useState<RequestError | undefined>(undefined);
-  const apiResponseDialog = useRef<HTMLDialogElement>(null);
+  // const apiResponseDialog = useRef<HTMLDialogElement>(null);
   const [solarPanels, setSolarPanels] = useState<google.maps.Polygon[]>([]);
   const [panelCapacityRatio, setPanelCapacityRatio] = useState(1.0);
   const panelConfig: SolarPanelConfig | undefined = buildingInsights?.solarPotential.solarPanelConfigs[configId ?? 0];

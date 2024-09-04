@@ -23,10 +23,10 @@ const Search: React.FC<SearchBarProps> = ({ setLocation, placesLibrary, map, ini
         }
 
         // Set the map to the selected place's location.
-        if (place.geometry.viewport) {
+        if (place.geometry.viewport && map !== null) {
           map.fitBounds(place.geometry.viewport);
           map.setZoom(zoom);
-        } else {
+        } else if(map !== null){
           map.setCenter(place.geometry.location);
           map.setZoom(zoom);
         }

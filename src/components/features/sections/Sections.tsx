@@ -2,50 +2,51 @@ import { useState, useEffect } from 'react';
 import { BuildingInsightsResponse, SolarSectionsProps } from '../../../types/solar'; 
 import { findSolarConfig } from '../../../utils/utils';
 
+import styles from "./sections.module.scss"
+
 import BuildingInsightsSection from './buildingInsightsSection/BuildingInsightsSection';
-// import DataLayersSection from './DataLayersSection';
+import DataLayersSection from './dataLayersSection/DataLayersSection';
 // import SolarPotentialSection from './SolarPotentialSection';
 
 
 
 const Sections: React.FC<SolarSectionsProps> = ({ location, map, geometryLibrary, googleMapsApiKey }) => {
   const [buildingInsights, setBuildingInsights] = useState<BuildingInsightsResponse | undefined>(undefined);
-  const [expandedSection, setExpandedSection] = useState<string>('');
   const [showPanels, setShowPanels] = useState<boolean>(true);
-  const [monthlyAverageEnergyBillInput, setMonthlyAverageEnergyBillInput] = useState<number>(100);
+  const [monthlyAverageEnergyBillInput, setMonthlyAverageEnergyBillInput] = useState<number>(300);
   const [panelCapacityWattsInput, setPanelCapacityWattsInput] = useState<number>(250);
   const [energyCostPerKwhInput, setEnergyCostPerKwhInput] = useState<number>(0.31);
   const [dcToAcDerateInput, setDcToAcDerateInput] = useState<number>(0.85);
   const [yearlyKwhEnergyConsumption, setYearlyKwhEnergyConsumption] = useState<number>(0);
   const [configId, setConfigId] = useState<number | undefined>(undefined);
 
-  // Compute yearly energy consumption
   useEffect(() => {
+    // Compute yearly energy consumption
     const consumption = (monthlyAverageEnergyBillInput / energyCostPerKwhInput) * 12;
     setYearlyKwhEnergyConsumption(consumption);
-  }, [monthlyAverageEnergyBillInput, energyCostPerKwhInput]);
-
-  // Update configId if necessary
-  useEffect(() => {
-    if (configId === undefined && buildingInsights) {
-      const defaultPanelCapacity = buildingInsights.solarPotential.panelCapacityWatts;
-      const panelCapacityRatio = panelCapacityWattsInput / defaultPanelCapacity;
-      const newConfigId = findSolarConfig(
-        buildingInsights.solarPotential.solarPanelConfigs,
-        yearlyKwhEnergyConsumption,
-        panelCapacityRatio,
-        dcToAcDerateInput
-      );
-      setConfigId(newConfigId);
+    
+  
+    // Update configId if necessary, but only after yearlyKwhEnergyConsumption has been updated
+    if (yearlyKwhEnergyConsumption > 0) {
+      if (configId === undefined && buildingInsights) {
+        const defaultPanelCapacity = buildingInsights.solarPotential.panelCapacityWatts; //400
+        const panelCapacityRatio = panelCapacityWattsInput / defaultPanelCapacity;
+        const newConfigId = findSolarConfig(
+          buildingInsights.solarPotential.solarPanelConfigs,
+          yearlyKwhEnergyConsumption,
+          panelCapacityRatio,
+          dcToAcDerateInput
+        );
+        console.log(newConfigId);
+        setConfigId(newConfigId);
+      }
     }
-  }, [buildingInsights, configId, panelCapacityWattsInput, yearlyKwhEnergyConsumption, dcToAcDerateInput]);
+  }, [buildingInsights, configId, dcToAcDerateInput, energyCostPerKwhInput, monthlyAverageEnergyBillInput, panelCapacityWattsInput, yearlyKwhEnergyConsumption]);
 
   return (
-    <div className="flex flex-col rounded-md shadow-md">
+    <div className={styles.section_container}>
       {geometryLibrary && map && (
         <BuildingInsightsSection
-          expandedSection={expandedSection}
-          setExpandedSection={setExpandedSection}
           buildingInsights={buildingInsights}
           setBuildingInsights={setBuildingInsights}
           configId={configId}
@@ -61,12 +62,9 @@ const Sections: React.FC<SolarSectionsProps> = ({ location, map, geometryLibrary
         />
       )}
 
-      {/* {buildingInsights && configId !== undefined && (
+      {buildingInsights && configId !== undefined && (
         <>
-          <hr className="md-divider inset" />
           <DataLayersSection
-            expandedSection={expandedSection}
-            setExpandedSection={setExpandedSection}
             showPanels={showPanels}
             setShowPanels={setShowPanels}
             googleMapsApiKey={googleMapsApiKey}
@@ -75,7 +73,7 @@ const Sections: React.FC<SolarSectionsProps> = ({ location, map, geometryLibrary
             map={map}
           />
 
-          <hr className="md-divider inset" />
+          {/*
           <SolarPotentialSection
             expandedSection={expandedSection}
             setExpandedSection={setExpandedSection}
@@ -91,9 +89,9 @@ const Sections: React.FC<SolarSectionsProps> = ({ location, map, geometryLibrary
             setDcToAcDerateInput={setDcToAcDerateInput}
             solarPanelConfigs={buildingInsights.solarPotential.solarPanelConfigs}
             defaultPanelCapacityWatts={buildingInsights.solarPotential.panelCapacityWatts}
-          />
+          /> */}
         </>
-      )} */}
+      )}
     </div>
   );
 };

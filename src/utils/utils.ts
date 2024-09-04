@@ -114,7 +114,6 @@ export async function getDataLayerUrls(
         console.error('getDataLayerUrls\n', content);
         throw content;
       }
-      console.log('dataLayersResponse', content);
       return content;
     },
   );
@@ -149,7 +148,7 @@ import proj4 from 'proj4';
  * @return {Promise<GeoTiff>}  Pixel values with shape and lat/lon bounds.
  */
 export async function downloadGeoTIFF(url: string, apiKey: string): Promise<GeoTiff> {
-  console.log(`Downloading data layer: ${url}`);
+  // console.log(`Downloading data layer: ${url}`);
 
   // Include your Google Cloud API key in the Data Layers URL.
   const solarUrl = url.includes('solar.googleapis.com') ? url + `&key=${apiKey}` : url;

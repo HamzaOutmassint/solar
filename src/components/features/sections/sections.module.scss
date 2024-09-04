@@ -1,0 +1,19 @@
+
+
+.section_container{
+    max-height: 74vh;
+    overflow: auto;
+
+    &::-webkit-scrollbar {
+        width: 4px;
+    }
+      
+    &::-webkit-scrollbar-track {
+    background: #ffffff;
+    }
+      
+    &::-webkit-scrollbar-thumb {
+        background: #7c7a7a;
+        border-radius: 8px;
+    }
+}

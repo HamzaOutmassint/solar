@@ -1,5 +1,4 @@
 
-
 .accordion{
     margin-bottom: 4px;
     .accordion__header{
@@ -26,6 +25,7 @@
         }
     }
 
+    
     .accordion__content{
         height: 0;
         overflow: hidden;
@@ -34,36 +34,50 @@
         display: flex;
         flex-direction: column;
         gap: 20px;
+       align-items: center;
 
         &.toggel{
             // border-bottom: 1.5px solid #86717175;
             --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / .1), 0 2px 4px -2px rgb(0 0 0 / .1);
             --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
             box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),var(--tw-ring-shadow, 0 0 #0000),var(--tw-shadow);
-            height: 180px;
+            height: 150px;
             border-radius: 0 0 8px 8px;
         }
 
-        .errorMessage{
-            color: #7A757F;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-
-            .top{
-                display: flex;
-                align-items: center;
-                flex-direction: column;
-                font-weight: 500;
-                font-size: 24px;
-            }
-
-            .label{
-                text-align: center;
-                color: #999999;
-                font-size: 16px;
-            }
+        .desc{
+            color: #5b5a5c;
         }
+
+        select {
+            font-size: 15px;
+            padding: 14px 10px;
+            border: 1px solid #ccc;
+            border-radius: 25px;
+            width: 90%;
+            appearance: none;
+            font-weight: 600;
+            font-family: "Roboto", sans-serif !important;
+            display: flex;
+            text-align: center;
+            color: #574a4a;
+            cursor: pointer;
+            outline-color: #6750a4;
+          }
+          
+          option {
+            cursor: pointer;
+            padding: 5px;
+            background-color: #f0f0f0;
+          }
+          
+          option:hover {
+            background-color: #e0e0e0;
+          }
+          
+          option:selected {
+            background-color: #ddd;
+          }
     }
 }
+

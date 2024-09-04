@@ -135,21 +135,21 @@ export type LayerId = 'mask' | 'dsm' | 'rgb' | 'annualFlux' | 'monthlyFlux' | 'h
 export interface SearchBarProps {
   setLocation: (location: google.maps.LatLng | undefined) => void;
   placesLibrary: google.maps.PlacesLibrary | null;
-  map: google.maps.Map | undefined;
+  map: google.maps.Map | null;
   initialValue: string;
   zoom: number;
 }
 
 export interface SolarSectionsProps {
   location: google.maps.LatLng;
-  map: google.maps.Map | undefined;
+  map: google.maps.Map | null;
   geometryLibrary: google.maps.GeometryLibrary | null;
   googleMapsApiKey: string;
 }
 
 export interface buildingInsightsSectionProps {
-  expandedSection: string;
-  setExpandedSection: React.Dispatch<React.SetStateAction<string>>;
+  expandedSection?: string;
+  setExpandedSection?: React.Dispatch<React.SetStateAction<string>>;
   buildingInsights: BuildingInsightsResponse | undefined;
   setBuildingInsights: React.Dispatch<React.SetStateAction<BuildingInsightsResponse | undefined>>;
   configId: number | undefined;
@@ -162,6 +162,16 @@ export interface buildingInsightsSectionProps {
   geometryLibrary: google.maps.GeometryLibrary;
   location: google.maps.LatLng;
   map: google.maps.Map;
+}
+
+export interface dataLayersSectionProps {
+  expandedSection?: string;
+  showPanels: boolean;
+  setShowPanels : React.Dispatch<React.SetStateAction<boolean>>
+  googleMapsApiKey: string;
+  buildingInsights: BuildingInsightsResponse;
+  geometryLibrary: google.maps.GeometryLibrary | null;
+  map: google.maps.Map | null;
 }
 
 export interface inputPanelCountProps {

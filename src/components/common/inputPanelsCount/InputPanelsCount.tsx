@@ -5,10 +5,6 @@ import { Sun } from 'lucide-react';
 
 const InputPanelCount = ({ configId, setConfigId , solarPanelConfigs }: inputPanelCountProps ) => {
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setConfigId(parseInt(event.target.value, 10));
-  };
-
   // console.log(solarPanelConfigs)
   // console.log(configId)
   return (
@@ -20,9 +16,12 @@ const InputPanelCount = ({ configId, setConfigId , solarPanelConfigs }: inputPan
         </div>
         <div className={styles.header_right}>
             {
-              configId !== undefined  && (
-                `${solarPanelConfigs[configId].panelsCount} panels`
-              )
+              // temporary solution
+              configId !== undefined && configId <= solarPanelConfigs.length
+              ?
+              `${solarPanelConfigs[configId].panelsCount} panels`
+              :
+              `${solarPanelConfigs[0].panelsCount} panels`
             }
         </div>
       </div>
@@ -32,8 +31,9 @@ const InputPanelCount = ({ configId, setConfigId , solarPanelConfigs }: inputPan
         min={0}
         max={solarPanelConfigs.length - 1} 
         value={configId} 
+        // value={configId !== undefined && configId <= solarPanelConfigs.length ? configId : 4} 
         className={styles.inputPanelsCount}  
-        onChange={(e)=>handleChange(e)}
+        onChange={(e)=>setConfigId(parseInt(e.target.value))}
       />
     </div>
   );

@@ -21,7 +21,7 @@ const zoom = 19;
 
 function App() {
   const [location, setLocation] = useState<google.maps.LatLng | undefined>(undefined);
-  const [map, setMap] = useState<google.maps.Map | undefined>(undefined);
+  const [map, setMap] = useState<google.maps.Map | null>(null);
   const [geometryLibrary, setGeometryLibrary] = useState<google.maps.GeometryLibrary | null>(null);
   const [placesLibrary, setPlacesLibrary] = useState<google.maps.PlacesLibrary | null>(null);
 

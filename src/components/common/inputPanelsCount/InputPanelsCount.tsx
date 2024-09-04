@@ -1,22 +1,16 @@
-import React, { useState } from 'react';
-import { SolarPanelConfig } from '../../../types/solar';
+import { inputPanelCountProps } from '../../../types/solar';
+import styles from "./inputPanelsCount.module.scss"
 import { Sun } from 'lucide-react';
 
-import styles from "./inputPanelsCount.module.scss"
 
-
-interface solarPanelCountProps {
-  configId : number | undefined;
-  setConfigId: React.Dispatch<React.SetStateAction<number | undefined>>;
-  solarPanelConfigs : SolarPanelConfig[];
-}
-
-const SolarPanelCount = ({ configId, setConfigId , solarPanelConfigs }: solarPanelCountProps ) => {
+const InputPanelCount = ({ configId, setConfigId , solarPanelConfigs }: inputPanelCountProps ) => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setConfigId(parseInt(event.target.value, 10));
   };
 
+  // console.log(solarPanelConfigs)
+  // console.log(configId)
   return (
     <div>
       <div className={styles.header}>
@@ -45,4 +39,4 @@ const SolarPanelCount = ({ configId, setConfigId , solarPanelConfigs }: solarPan
   );
 };
 
-export default SolarPanelCount;
+export default InputPanelCount;

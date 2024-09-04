@@ -1,22 +1,13 @@
-
 import React, { useEffect, useRef, useState } from 'react';
+import { SearchBarProps } from '../../../types/solar';
 import styles from "./search.module.scss"
 
-interface SearchBarProps {
-  location: google.maps.LatLng | undefined;
-  setLocation: (location: google.maps.LatLng | undefined) => void;
-  placesLibrary: google.maps.PlacesLibrary | null;
-  map: google.maps.Map | undefined;
-  initialValue: string;
-  zoom: number;
-}
 
-const Search: React.FC<SearchBarProps> = ({ location, setLocation, placesLibrary, map, initialValue, zoom }) => {
+const Search: React.FC<SearchBarProps> = ({ setLocation, placesLibrary, map, initialValue, zoom }) => {
   const [searchValue, setSearchValue] = useState(initialValue);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-
     // Wait until the input is mounted and then create the autocomplete instance.
     if (inputRef.current && placesLibrary !== null && map !== undefined) {
       const autocomplete = new placesLibrary.Autocomplete(inputRef.current, {

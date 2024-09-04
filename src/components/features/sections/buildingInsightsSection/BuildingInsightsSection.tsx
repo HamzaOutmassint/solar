@@ -1,8 +1,8 @@
-import { ChevronDown, ChevronUp, House } from "lucide-react";
+import { ChevronDown, ChevronUp, House, OctagonX } from "lucide-react";
 import { useState , useEffect, useRef } from "react";
 
 import styles from "./buildingInsightsSection.module.scss"
-import { BuildingInsightsResponse, RequestError, SolarPanelConfig } from "../../../../types/solar";
+import { buildingInsightsSectionProps, RequestError, SolarPanelConfig } from "../../../../types/solar";
 import { createPalette , normalize, rgbToColor } from "../../../../utils/visualize";
 
 import InputPanelsCount from "../../../common/inputPanelsCount/InputPanelsCount";
@@ -10,24 +10,6 @@ import { panelsPalette } from "../../../../types/colors";
 import { findClosestBuilding } from "../../../../utils/utils";
 import NumberInput from "../../../common/numberInput/NumberInput";
 import ShowPanels from "./../../../common/showPanels/ShowPanels";
-
-
-interface buildingInsightsSectionProps {
-  expandedSection: string;
-  setExpandedSection: React.Dispatch<React.SetStateAction<string>>;
-  buildingInsights: BuildingInsightsResponse | undefined;
-  setBuildingInsights: React.Dispatch<React.SetStateAction<BuildingInsightsResponse | undefined>>;
-  configId: number | undefined;
-  setConfigId: React.Dispatch<React.SetStateAction<number | undefined>>;
-  panelCapacityWatts: number;
-  setPanelCapacityWatts: React.Dispatch<React.SetStateAction<number>>;
-  showPanels: boolean;
-  setShowPanels: React.Dispatch<React.SetStateAction<boolean>>;
-  googleMapsApiKey: string;
-  geometryLibrary: google.maps.GeometryLibrary;
-  location: google.maps.LatLng;
-  map: google.maps.Map;
-}
 
 
 const BuildingInsightsSection = ({ 
@@ -55,34 +37,30 @@ const BuildingInsightsSection = ({
   const panelConfig: SolarPanelConfig | undefined = buildingInsights?.solarPotential.solarPanelConfigs[configId ?? 0];
 
 
-
-    useEffect(() => {
+  useEffect(() => {
     if (buildingInsights) {
       const defaultPanelCapacity = buildingInsights.solarPotential.panelCapacityWatts;
       setPanelCapacityRatio(panelCapacityWatts / defaultPanelCapacity);
     }
   }, [buildingInsights, panelCapacityWatts]);
 
-    useEffect(() => {
-      console.log('panelConfig.panelsCount:', panelConfig?.panelsCount);
-      if (buildingInsights && solarPanels.length > 0) {
-        solarPanels.forEach((panel, i) => {
-          panel.setMap(showPanels && panelConfig && i < panelConfig.panelsCount ? map : null);
-        });
+  
+  useEffect(() => {
+    if (buildingInsights && solarPanels.length > 0) {
+      solarPanels.map((panel, i)=>(
+        panel.setMap(showPanels && panelConfig && i < panelConfig.panelsCount ? map : null)
+      ))
     }
   }, [buildingInsights, showPanels, panelConfig, map, solarPanels]);
 
-
-
+  
   const showSolarPotential = async (location: google.maps.LatLng) => {
     if (requestSent) return;
 
     setBuildingInsights(undefined);
     setRequestError(undefined);
-    solarPanels.forEach((panel) => panel.setMap(null));
-    setSolarPanels([]);
-
     setRequestSent(true);
+
     try {
       const response = await findClosestBuilding(location, googleMapsApiKey);
       setBuildingInsights(response);
@@ -95,11 +73,11 @@ const BuildingInsightsSection = ({
       const panels = solarPotential.solarPanels.map((panel) => {
         const [w, h] = [solarPotential.panelWidthMeters / 2, solarPotential.panelHeightMeters / 2];
         const points = [
-          { x: +w, y: +h },
-          { x: +w, y: -h },
-          { x: -w, y: -h },
-          { x: -w, y: +h },
-          { x: +w, y: +h },
+          { x: +w, y: +h }, // top right
+          { x: +w, y: -h }, // bottom right
+          { x: -w, y: -h }, // bottom left
+          { x: -w, y: +h }, // top left
+          { x: +w, y: +h }, // top right
         ];
         const orientation = panel.orientation === 'PORTRAIT' ? 90 : 0;
         const azimuth = solarPotential.roofSegmentStats[panel.segmentIndex].azimuthDegrees;
@@ -125,12 +103,12 @@ const BuildingInsightsSection = ({
     } finally {
       setRequestSent(false);
     }
+
   };
 
   useEffect(() => {
     showSolarPotential(location);
-  }, [location]);
-
+  }, [location, map]);
 
   return (
     <div className={styles.accordion}>
@@ -150,7 +128,18 @@ const BuildingInsightsSection = ({
             </span>
         </div>
         <div className={` ${ accordionStates ? styles.toggel : ''} ${styles.accordion__content}`}>
-          {
+        {
+
+          requestError 
+          ?
+            <div className={styles.errorMessage}>
+              <div className={styles.top}>
+                <OctagonX size={30}/>
+                <div>Not Found</div>
+              </div>
+              <div className={styles.label}>Requested entity was not found. Please try with another location.</div>
+            </div>
+          :
             buildingInsights !== undefined && (   
               <>
                 <InputPanelsCount 
@@ -173,7 +162,8 @@ const BuildingInsightsSection = ({
               </>  
             )
           }
-        </div>
+          </div>
+
     </div>
   );
 }

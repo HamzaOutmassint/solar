@@ -130,3 +130,55 @@ export interface RequestError {
 // https://developers.google.com/maps/documentation/solar/reference/rest/v1/dataLayers
 export type LayerId = 'mask' | 'dsm' | 'rgb' | 'annualFlux' | 'monthlyFlux' | 'hourlyShade';
 
+
+// [START my_components_data_types]
+export interface SearchBarProps {
+  setLocation: (location: google.maps.LatLng | undefined) => void;
+  placesLibrary: google.maps.PlacesLibrary | null;
+  map: google.maps.Map | undefined;
+  initialValue: string;
+  zoom: number;
+}
+
+export interface SolarSectionsProps {
+  location: google.maps.LatLng;
+  map: google.maps.Map | undefined;
+  geometryLibrary: google.maps.GeometryLibrary | null;
+  googleMapsApiKey: string;
+}
+
+export interface buildingInsightsSectionProps {
+  expandedSection: string;
+  setExpandedSection: React.Dispatch<React.SetStateAction<string>>;
+  buildingInsights: BuildingInsightsResponse | undefined;
+  setBuildingInsights: React.Dispatch<React.SetStateAction<BuildingInsightsResponse | undefined>>;
+  configId: number | undefined;
+  setConfigId: React.Dispatch<React.SetStateAction<number | undefined>>;
+  panelCapacityWatts: number;
+  setPanelCapacityWatts: React.Dispatch<React.SetStateAction<number>>;
+  showPanels: boolean;
+  setShowPanels: React.Dispatch<React.SetStateAction<boolean>>;
+  googleMapsApiKey: string;
+  geometryLibrary: google.maps.GeometryLibrary;
+  location: google.maps.LatLng;
+  map: google.maps.Map;
+}
+
+export interface inputPanelCountProps {
+  configId : number | undefined;
+  setConfigId: React.Dispatch<React.SetStateAction<number | undefined>>;
+  solarPanelConfigs : SolarPanelConfig[];
+}
+
+export interface showPanlesProps {
+  showPanels : boolean;
+  setShowPanels : React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export interface numberInputProps{
+  value : number
+  setValue : React.Dispatch<React.SetStateAction<number>>
+  label : string
+  suffix : string
+}
+// [END my_components_data_types]

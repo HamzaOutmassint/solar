@@ -12,7 +12,13 @@
 
     .appContainer__sidebar{
         width: 24rem;
-        padding: 16px 8px;
+        padding: 16px 8px 6px 8px;
+        display: flex;
+        flex-direction: column;
+
+        .top{
+            flex: 1;
+        }
 
         &_description{ 
             padding: 16px 10px;

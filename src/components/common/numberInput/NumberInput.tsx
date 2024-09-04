@@ -1,11 +1,6 @@
+import { numberInputProps } from "../../../types/solar"
 import styles from "./numberInput.module.scss"
 
-interface numberInputProps{
-    value : number
-    setValue : React.Dispatch<React.SetStateAction<number>>
-    label : string
-    suffix : string
-}
 
 const NumberInput = ({value , setValue , label , suffix}: numberInputProps) => {
   return (

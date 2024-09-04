@@ -1,9 +1,5 @@
+import { showPanlesProps } from "../../../types/solar";
 import styles from "./showPanels.module.scss"
-
-interface showPanlesProps {
-    showPanels : boolean;
-    setShowPanels : React.Dispatch<React.SetStateAction<boolean>>;
-}
 
 const ShowPanels = ({ showPanels, setShowPanels }: showPanlesProps) => {
 

@@ -1,23 +1,18 @@
 import { useState, useEffect } from 'react';
-import { BuildingInsightsResponse } from '../../../types/solar'; 
+import { BuildingInsightsResponse, SolarSectionsProps } from '../../../types/solar'; 
 import { findSolarConfig } from '../../../utils/utils';
 
 import BuildingInsightsSection from './buildingInsightsSection/BuildingInsightsSection';
 // import DataLayersSection from './DataLayersSection';
 // import SolarPotentialSection from './SolarPotentialSection';
 
-interface SolarComponentProps {
-  location: google.maps.LatLng;
-  map: google.maps.Map | undefined;
-  geometryLibrary: google.maps.GeometryLibrary | null;
-  googleMapsApiKey: string;
-}
 
-const Sections: React.FC<SolarComponentProps> = ({ location, map, geometryLibrary, googleMapsApiKey }) => {
+
+const Sections: React.FC<SolarSectionsProps> = ({ location, map, geometryLibrary, googleMapsApiKey }) => {
   const [buildingInsights, setBuildingInsights] = useState<BuildingInsightsResponse | undefined>(undefined);
   const [expandedSection, setExpandedSection] = useState<string>('');
   const [showPanels, setShowPanels] = useState<boolean>(true);
-  const [monthlyAverageEnergyBillInput, setMonthlyAverageEnergyBillInput] = useState<number>(300);
+  const [monthlyAverageEnergyBillInput, setMonthlyAverageEnergyBillInput] = useState<number>(100);
   const [panelCapacityWattsInput, setPanelCapacityWattsInput] = useState<number>(250);
   const [energyCostPerKwhInput, setEnergyCostPerKwhInput] = useState<number>(0.31);
   const [dcToAcDerateInput, setDcToAcDerateInput] = useState<number>(0.85);

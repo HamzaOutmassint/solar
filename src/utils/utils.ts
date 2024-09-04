@@ -39,8 +39,7 @@ export function findSolarConfig(
   dcToAcDerate: number,
 ) {
   return solarPanelConfigs.findIndex(
-    (config) =>
-      config.yearlyEnergyDcKwh * panelCapacityRatio * dcToAcDerate >= yearlyKwhEnergyConsumption,
+    (config) => config.yearlyEnergyDcKwh * panelCapacityRatio * dcToAcDerate >= yearlyKwhEnergyConsumption,
   );
 }
 
@@ -62,7 +61,7 @@ export async function findClosestBuilding(
     'location.latitude': location.lat().toFixed(5),
     'location.longitude': location.lng().toFixed(5),
   };
-  console.log('GET buildingInsights\n', args);
+  // console.log('GET buildingInsights args\n', args);
   const params = new URLSearchParams({ ...args, key: apiKey });
   // https://developers.google.com/maps/documentation/solar/reference/rest/v1/buildingInsights/findClosest
   return fetch(`https://solar.googleapis.com/v1/buildingInsights:findClosest?${params}`).then(
@@ -72,7 +71,7 @@ export async function findClosestBuilding(
         console.error('findClosestBuilding\n', content);
         throw content;
       }
-      console.log('buildingInsightsResponse', content);
+      // console.log('buildingInsightsResponse', content);
       return content;
     },
   );
@@ -105,7 +104,7 @@ export async function getDataLayerUrls(
     // the Solar API will return us the highest quality available.
     required_quality: 'LOW',
   };
-  console.log('GET dataLayers\n', args);
+  // console.log('GET dataLayers\n', args);
   const params = new URLSearchParams({ ...args, key: apiKey });
   // https://developers.google.com/maps/documentation/solar/reference/rest/v1/dataLayers/get
   return fetch(`https://solar.googleapis.com/v1/dataLayers:get?${params}`).then(
@@ -134,8 +133,11 @@ export interface GeoTiff {
 
 // [START solar_api_download_geotiff]
 // npm install geotiff geotiff-geokeys-to-proj4 proj4
+// eslint-disable-next-line import/first
 import * as geotiff from 'geotiff';
+// eslint-disable-next-line import/first
 import * as geokeysToProj4 from 'geotiff-geokeys-to-proj4';
+// eslint-disable-next-line import/first
 import proj4 from 'proj4';
 
 

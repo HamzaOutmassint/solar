@@ -12,7 +12,9 @@ const { Loader } = GMAPILoader;
 const googleMapsApiKey : string = process.env.REACT_APP_GOOGLE_MAPS_API_KEY as string;
 
 const defaultPlace = {
+  // name: 'Domexpo - La Ville-du-Bois',
   name: 'Rinconada Library',
+  // address: 'Domexpo Sud - N20, Lot n° 14, 91620 La ville-du-Bois, France',
   address: '1213 Newell Rd, Palo Alto, CA 94303',
 };
 const zoom = 19;
@@ -24,7 +26,7 @@ function App() {
   const [placesLibrary, setPlacesLibrary] = useState<google.maps.PlacesLibrary | null>(null);
 
   const mapElement = useRef<HTMLDivElement | null>(null);
-  
+
   useEffect(() => {
     const initMap = async () => {
       // Load Google Maps libraries.
@@ -77,22 +79,23 @@ function App() {
       <div className={styles.appContainer__map} ref={mapElement} />
 
       <aside className={styles.appContainer__sidebar}>
-        <Search 
-          placesLibrary={placesLibrary}
-          location={location}
-          setLocation={setLocation}
-          map={map}
-          initialValue={defaultPlace.name}
-          zoom={zoom}
-        />
-        {
-          location && <Sections 
-                        location={location}
-                        map={map}
-                        geometryLibrary={geometryLibrary}
-                        googleMapsApiKey={googleMapsApiKey}
-                      />
-        }
+        <div className={styles.top}>
+          <Search 
+            placesLibrary={placesLibrary}
+            setLocation={setLocation}
+            map={map}
+            initialValue={defaultPlace.name}
+            zoom={zoom}
+          />
+          {
+            location && <Sections 
+                          location={location}
+                          map={map}
+                          geometryLibrary={geometryLibrary}
+                          googleMapsApiKey={googleMapsApiKey}
+                        />
+          }
+        </div>
         <div className={styles.appContainer__sidebar_description}>
           <p>You can visit 
             <a

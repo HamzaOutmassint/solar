@@ -185,6 +185,11 @@ export interface showPanlesProps {
   setShowPanels : React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+export interface showRoofOnlyProps {
+  showRoofOnly : boolean;
+  setShowRoofOnly : React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 export interface numberInputProps{
   value : number
   setValue : React.Dispatch<React.SetStateAction<number>>

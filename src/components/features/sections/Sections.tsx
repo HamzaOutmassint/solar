@@ -6,6 +6,7 @@ import styles from "./sections.module.scss"
 
 import BuildingInsightsSection from './buildingInsightsSection/BuildingInsightsSection';
 import DataLayersSection from './dataLayersSection/DataLayersSection';
+import ShowRoofOnly from '../../common/showRoofOnly/ShowRoofOnly';
 // import SolarPotentialSection from './SolarPotentialSection';
 
 
@@ -13,6 +14,7 @@ import DataLayersSection from './dataLayersSection/DataLayersSection';
 const Sections: React.FC<SolarSectionsProps> = ({ location, map, geometryLibrary, googleMapsApiKey }) => {
   const [buildingInsights, setBuildingInsights] = useState<BuildingInsightsResponse | undefined>(undefined);
   const [showPanels, setShowPanels] = useState<boolean>(true);
+  const [showRoofOnly, setShowRoofOnly] = useState<boolean>(false);
   const [monthlyAverageEnergyBillInput, setMonthlyAverageEnergyBillInput] = useState<number>(300);
   const [panelCapacityWattsInput, setPanelCapacityWattsInput] = useState<number>(250);
   const [energyCostPerKwhInput, setEnergyCostPerKwhInput] = useState<number>(0.31);
@@ -37,7 +39,6 @@ const Sections: React.FC<SolarSectionsProps> = ({ location, map, geometryLibrary
           panelCapacityRatio,
           dcToAcDerateInput
         );
-        console.log(newConfigId);
         setConfigId(newConfigId);
       }
     }

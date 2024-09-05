@@ -1,210 +1,7 @@
-// import { ChevronDown, ChevronUp, Layers } from "lucide-react";
-// import DropDown from "../../../common/dropDown/DropDown";
-// import styles from "./dataLayersSection.module.scss";
-// import { useEffect, useState } from "react";
-// import { 
-//   DataLayersResponse, 
-//   dataLayersSectionProps, 
-//   LayerId, 
-//   RequestError 
-// } from "../../../../types/solar";
-// import { getLayer, Layer } from "../../../../types/layer";
-// import { getDataLayerUrls } from "../../../../utils/utils";
-
-// const DataLayersSection: React.FC<dataLayersSectionProps> = ({
-//   showPanels,
-//   setShowPanels,
-//   googleMapsApiKey,
-//   buildingInsights,
-//   geometryLibrary,
-//   map,
-// }) => {
-//   const [accordionStates, setAccordionStates] = useState<boolean>(false);
-//   const [dataLayersResponse, setDataLayersResponse] = useState<DataLayersResponse | undefined>();
-//   const [imageryQuality, setImageryQuality] = useState<'HIGH' | 'MEDIUM' | 'LOW'>();
-//   const [requestError, setRequestError] = useState<RequestError | undefined>();
-//   const [overlays, setOverlays] = useState<google.maps.GroundOverlay[]>([]);
-//   const [layerId, setLayerId] = useState<LayerId | 'none'>('none');
-//   const [playAnimation, setPlayAnimation] = useState(true);
-//   const [showRoofOnly, setShowRoofOnly] = useState(false);
-//   const [layer, setLayer] = useState<Layer | undefined>();
-//   const [month, setMonth] = useState(0);
-//   const [hour, setHour] = useState(0);
-//   const [day, setDay] = useState(14);
-//   const [tick, setTick] = useState(0);
-
-//   const [isLoading , setIsLoading] = useState<boolean>(false)
-
-//   const monthNames = [
-//     'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-//     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-//   ];
-
-//   const dataLayerOptions: Record<LayerId | 'none', string> = {
-//     none: 'No layer',
-//     mask: 'Roof mask',
-//     dsm: 'Digital Surface Model',
-//     rgb: 'Aerial image',
-//     annualFlux: 'Annual sunshine',
-//     monthlyFlux: 'Monthly sunshine',
-//     hourlyShade: 'Hourly shade',
-//   };
-
-//   const showDataLayer = async (reset = false) => {
-//     if (reset && map !== null) {
-//       console.log(layerId)
-//       setDataLayersResponse(undefined);
-//       setRequestError(undefined);
-//       setLayer(undefined);
-//       setShowRoofOnly(['annualFlux', 'monthlyFlux', 'hourlyShade'].includes(layerId));
-//       map.setMapTypeId(layerId === 'rgb' ? 'roadmap' : 'satellite');
-//       overlays.forEach((overlay) => overlay.setMap(null));
-//       setMonth(layerId === 'hourlyShade' ? 3 : 0);
-//       setDay(14);
-//       setHour(5);
-//       setPlayAnimation(['monthlyFlux', 'hourlyShade'].includes(layerId));
-//     }
-
-//     if (layerId === 'none') return;
-
-//     if (!layer && geometryLibrary !== null) {
-//       const { center, boundingBox } = buildingInsights;
-//       const diameter = geometryLibrary.spherical.computeDistanceBetween(
-//         new google.maps.LatLng(boundingBox.ne.latitude, boundingBox.ne.longitude),
-//         new google.maps.LatLng(boundingBox.sw.latitude, boundingBox.sw.longitude)
-//       );
-//       const radius = Math.ceil(diameter / 2);
-
-//       try {
-//         const response = await getDataLayerUrls(center, radius, googleMapsApiKey);
-//         setDataLayersResponse(response);
-//         setImageryQuality(response.imageryQuality);
-//         const layerResponse = await getLayer(layerId, response, googleMapsApiKey);
-//         setLayer(layerResponse);
-//       } catch (error) {
-//         setRequestError(error as RequestError);
-//       }
-//     }
-
-//     if (layer) {
-//       const bounds = layer.bounds;
-//       const newOverlays = layer
-//         .render(showRoofOnly, month, day)
-//         .map((canvas) => new google.maps.GroundOverlay(canvas.toDataURL(), bounds));
-
-//       setOverlays(newOverlays);
-//       if (!['monthlyFlux', 'hourlyShade'].includes(layer.id)) {
-//         newOverlays[0]?.setMap(map);
-//       }
-//     }
-//   };
-
-//   useEffect(() => {
-//     showDataLayer(true);
-
-//     const interval = setInterval(() => {
-//       setTick((prevTick) => prevTick + 1);
-//     }, 1000);
-
-//     return () => clearInterval(interval);
-//   }, [layerId]);
-
-//   // Handle overlay updates when the state changes
-//   useEffect(() => {
-//     if (map && overlays.length > 0) {
-//       // Remove previous overlays
-//       overlays.forEach((overlay) => overlay.setMap(null));
-
-//       if (['annualFlux', 'monthlyFlux', 'hourlyShade'].includes(layerId)) {
-//         // Show only the first overlay if `showRoofOnly` is true
-//         const visibleOverlays = overlays.filter((_, i) => showRoofOnly && i === 0);
-//         visibleOverlays.forEach((overlay) => overlay.setMap(map));
-//       } else if (layerId === 'rgb') {
-//         // Show all overlays
-//         overlays.forEach((overlay) => overlay.setMap(map));
-//       } else {
-//         // No overlays to show
-//       }
-//     }
-//   }, [map, overlays, layerId, showRoofOnly]);
-
-//   useEffect(() => {
-//     if (layer?.id === 'monthlyFlux') {
-//       overlays.forEach((overlay, i) => overlay.setMap(i === month ? map : null));
-//     } else if (layer?.id === 'hourlyShade') {
-//       overlays.forEach((overlay, i) => overlay.setMap(i === hour ? map : null));
-//     }
-//   }, [month, hour, layer, overlays]);
-
-//   useEffect(() => {
-//     if (layer?.id === 'monthlyFlux') {
-//       if (playAnimation) {
-//         setMonth(tick % 12);
-//       } else {
-//         setTick(month);
-//       }
-//     } else if (layer?.id === 'hourlyShade') {
-//       if (playAnimation) {
-//         setHour(tick % 24);
-//       } else {
-//         setTick(hour);
-//       }
-//     }
-//   }, [tick, month, hour, playAnimation]);
-
-//   const handelSelectChange = async (value: LayerId) => {
-//     setLayerId(value);
-//     setLayer(undefined);
-//     setIsLoading(true)
-
-//     try {
-//       await showDataLayer();
-//     } catch (error) {
-//       alert(`${error}`)
-//     } finally {
-//       setIsLoading(false);
-//     }
-//   };
-
-//   return (
-//     <div className={styles.accordion}>
-//       <div onClick={() => setAccordionStates(!accordionStates)} style={{ cursor: "pointer" }} className={styles.accordion__header}>
-//         <div className={styles.accordion__header_title}>
-//           <h1><Layers /> <span>Data Layers endpoint</span></h1>
-//           {
-//             accordionStates ? <ChevronDown /> : <ChevronUp />
-//           }
-//         </div>
-//         <span>monthly sunshine</span>
-//       </div>
-//       <div className={` ${accordionStates ? styles.toggel : ''} ${styles.accordion__content}`}>
-//         <div className={styles.desc}>
-//           <strong>Data Layers endpoint</strong> provides raw and processed imagery and granular details on an area surrounding a location.
-//         </div>
-//         <DropDown
-//           options={dataLayerOptions}
-//           onChange={handelSelectChange}
-//         />
-        
-//         {
-//           isLoading
-//           ?
-//           <strong>LOADING...1</strong>
-//           :
-//           <strong>DONE</strong>
-//         }
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default DataLayersSection;
-
-
 import { ChevronDown, ChevronUp, Layers } from "lucide-react";
 import DropDown from "../../../common/dropDown/DropDown";
 import styles from "./dataLayersSection.module.scss";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import {
   DataLayersResponse,
   dataLayersSectionProps,
@@ -213,6 +10,8 @@ import {
 } from "../../../../types/solar";
 import { getLayer, Layer } from "../../../../types/layer";
 import { getDataLayerUrls } from "../../../../utils/utils";
+import ShowRoofOnly from "../../../common/showRoofOnly/ShowRoofOnly";
+import Loading from "../../../common/loading/Loading";
 
 const DataLayersSection: React.FC<dataLayersSectionProps> = ({
   showPanels,
@@ -222,24 +21,21 @@ const DataLayersSection: React.FC<dataLayersSectionProps> = ({
   geometryLibrary,
   map,
 }) => {
-  const [accordionStates, setAccordionStates] = useState<boolean>(false);
-  const [dataLayersResponse, setDataLayersResponse] =
-    useState<DataLayersResponse | undefined>();
+  const [dataLayersResponse, setDataLayersResponse] = useState<DataLayersResponse | undefined>();
   const [imageryQuality, setImageryQuality] = useState<'HIGH' | 'MEDIUM' | 'LOW'>();
   const [requestError, setRequestError] = useState<RequestError | undefined>();
   const [overlays, setOverlays] = useState<google.maps.GroundOverlay[]>([]);
+  const [accordionStates, setAccordionStates] = useState<boolean>(false);
+  const [showRoofOnly, setShowRoofOnly] = useState<boolean>(false);
   const [layerId, setLayerId] = useState<LayerId | 'none'>('none');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [playAnimation, setPlayAnimation] = useState(true);
-  const [showRoofOnly, setShowRoofOnly] = useState(false);
   const [layer, setLayer] = useState<Layer | undefined>();
   const [month, setMonth] = useState(0);
   const [hour, setHour] = useState(0);
-  const [day, setDay] = useState(14);
   const [tick, setTick] = useState(0);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [day, setDay] = useState(14);
 
-  // const layerRef = useRef<Layer | undefined>(null);
-  let intervalRef = useRef<NodeJS.Timeout | null>(null); 
 
   const monthNames = [
     "Jan",
@@ -266,20 +62,24 @@ const DataLayersSection: React.FC<dataLayersSectionProps> = ({
     hourlyShade: "Hourly shade",
   };
 
-  const showRoofOnlyRef = useRef(true); // Use a ref for showRoofOnly
+  // const showRoofOnlyRef = useRef(false);
 
   useEffect(() => {
-    showRoofOnlyRef.current = [
+    setShowRoofOnly([
+      "mask",
+      "dsm",
       "annualFlux",
       "monthlyFlux",
       "hourlyShade",
-    ].includes(layerId);
+    ].includes(layerId))
   }, [layerId]);
 
-  // console.log(sh)
   // This effect fetches and updates the layer data
   useEffect(() => {
-    if (layerId === "none") return;
+    if (layerId === "none"){
+        setIsLoading(false)
+        return
+    };
 
     setIsLoading(true);
 
@@ -313,7 +113,7 @@ const DataLayersSection: React.FC<dataLayersSectionProps> = ({
             googleMapsApiKey
           );
 
-          // Wrap state update in a Promise
+          //  Wrap state layer in a Promise to avoid Asynchronous State Updates problem
           const updatePromise = new Promise<void>((resolve) => {
             setLayer(layerResponse);
             resolve();
@@ -345,7 +145,7 @@ const DataLayersSection: React.FC<dataLayersSectionProps> = ({
       const bounds = layer.bounds;
 
       const newOverlays = layer
-        .render(showRoofOnlyRef.current, month, day)
+        .render(showRoofOnly, month, day)
         .map((canvas) => new google.maps.GroundOverlay(canvas.toDataURL(), bounds));
 
       setOverlays(newOverlays);
@@ -356,19 +156,44 @@ const DataLayersSection: React.FC<dataLayersSectionProps> = ({
   };
 
   useEffect(() => {
+    // if (map && overlays.length > 0) {
+    //   // Remove previous overlays
+    //   overlays.forEach((overlay) => overlay.setMap(null));
+  
+    //   if (["mask", "dsm", "annualFlux", "monthlyFlux", "hourlyShade"].includes(layerId)) {
+    //     if (showRoofOnly) {
+    //       // Show only the first overlay
+    //       overlays[0]?.setMap(map); 
+    //     } else {
+    //       // Show all overlays
+    //       overlays.forEach((overlay) => overlay.setMap(map));
+    //     }
+    //   } else if (layerId === "rgb") {
+    //     // Show all overlays
+    //     overlays.forEach((overlay) => overlay.setMap(map));
+    //   }else if (layerId === "none"){
+    //     // remove all overlays from the map
+    //     overlays.forEach((overlay) => overlay.setMap(null));
+    //   }
+    // }
     if (map && overlays.length > 0) {
-      if (["annualFlux", "monthlyFlux", "hourlyShade"].includes(layerId)) {
+      overlays.forEach((overlay) => overlay.setMap(null));
+
+      if (["mask", "dsm", "annualFlux", "monthlyFlux", "hourlyShade",].includes(layerId)) {
         // Show only the first overlay if `showRoofOnly` is true
         const visibleOverlays = overlays.filter(
-          (_, i) => showRoofOnlyRef.current && i === 0
+          (_, i) => showRoofOnly && i === 0
         );
         visibleOverlays.forEach((overlay) => overlay.setMap(map));
       } else if (layerId === "rgb") {
         // Show all overlays
         overlays.forEach((overlay) => overlay.setMap(map));
+      }else if (layerId === "none"){
+        // remove all overlays from the map
+        overlays.forEach((overlay) => overlay.setMap(null));
       }
     }
-  }, [map, overlays, layerId, showRoofOnlyRef]);
+  }, [map, overlays, layerId, showRoofOnly]);
 
   // Manage overlays for monthly/hourly layers
   useEffect(() => {
@@ -433,7 +258,17 @@ const DataLayersSection: React.FC<dataLayersSectionProps> = ({
         </div>
         <DropDown options={dataLayerOptions} onChange={handleSelectChange} />
 
-        {isLoading ? <strong>LOADING...1</strong> : <strong>DONE</strong>}
+        {isLoading 
+        ? 
+          <Loading />
+        : 
+          null
+        }
+
+        <ShowRoofOnly 
+          showRoofOnly={showRoofOnly}
+          setShowRoofOnly={setShowRoofOnly}
+        />
       </div>
     </div>
   );

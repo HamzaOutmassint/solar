@@ -1,0 +1,31 @@
+.load_wrapp {
+  width: 80%;
+  border-radius: 5px;
+  background-color: #d8d8d8;
+
+  .load {
+    display: flex;
+    align-items: center;
+    .bar {
+      float: left;
+      width: 15px;
+      height: 6px;
+      border-radius: 2px;
+      background-color: #4b9cdb;
+      animation: loadingJ 2s cubic-bezier(0.17, 0.37, 0.43, 0.67) infinite;
+    }
+  }
+}
+
+@keyframes loadingJ {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  50% {
+    transform: translate(215px, 0);
+    background-color: #f5634a;
+    width: 25px;
+  }
+}

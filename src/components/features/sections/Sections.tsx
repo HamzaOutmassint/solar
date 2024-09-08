@@ -6,6 +6,7 @@ import styles from "./sections.module.scss"
 
 import BuildingInsightsSection from './buildingInsightsSection/BuildingInsightsSection';
 import DataLayersSection from './dataLayersSection/DataLayersSection';
+import SolarPotentialSection from './solarPotentialSection/SolarPotentialSection';
 // import SolarPotentialSection from './SolarPotentialSection';
 
 
@@ -13,13 +14,14 @@ import DataLayersSection from './dataLayersSection/DataLayersSection';
 const Sections: React.FC<SolarSectionsProps> = ({ location, map, geometryLibrary, googleMapsApiKey }) => {
   const [buildingInsights, setBuildingInsights] = useState<BuildingInsightsResponse | undefined>(undefined);
   const [showPanels, setShowPanels] = useState<boolean>(true);
-  const [showRoofOnly, setShowRoofOnly] = useState<boolean>(false);
+  // const [showRoofOnly, setShowRoofOnly] = useState<boolean>(false);
   const [monthlyAverageEnergyBillInput, setMonthlyAverageEnergyBillInput] = useState<number>(300);
   const [panelCapacityWattsInput, setPanelCapacityWattsInput] = useState<number>(250);
   const [energyCostPerKwhInput, setEnergyCostPerKwhInput] = useState<number>(0.31);
   const [dcToAcDerateInput, setDcToAcDerateInput] = useState<number>(0.85);
   const [yearlyKwhEnergyConsumption, setYearlyKwhEnergyConsumption] = useState<number>(0);
   const [configId, setConfigId] = useState<number | undefined>(undefined);
+
 
   useEffect(() => {
     // Compute yearly energy consumption
@@ -73,10 +75,8 @@ const Sections: React.FC<SolarSectionsProps> = ({ location, map, geometryLibrary
             map={map}
           />
 
-          {/*
+          
           <SolarPotentialSection
-            expandedSection={expandedSection}
-            setExpandedSection={setExpandedSection}
             configId={configId}
             setConfigId={setConfigId}
             monthlyAverageEnergyBillInput={monthlyAverageEnergyBillInput}
@@ -89,7 +89,7 @@ const Sections: React.FC<SolarSectionsProps> = ({ location, map, geometryLibrary
             setDcToAcDerateInput={setDcToAcDerateInput}
             solarPanelConfigs={buildingInsights.solarPotential.solarPanelConfigs}
             defaultPanelCapacityWatts={buildingInsights.solarPotential.panelCapacityWatts}
-          /> */}
+          />
         </>
       )}
     </div>

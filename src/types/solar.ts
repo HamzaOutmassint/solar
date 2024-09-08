@@ -174,6 +174,21 @@ export interface dataLayersSectionProps {
   map: google.maps.Map | null;
 }
 
+export interface solarPotentiolSectionProps {
+  configId: number | undefined;
+  setConfigId: React.Dispatch<React.SetStateAction<number | undefined>>;
+  monthlyAverageEnergyBillInput : number
+  setMonthlyAverageEnergyBillInput: React.Dispatch<React.SetStateAction<number>>;
+  energyCostPerKwhInput : number;
+  setEnergyCostPerKwhInput : React.Dispatch<React.SetStateAction<number>>;
+  panelCapacityWattsInput : number;
+  setPanelCapacityWattsInput : React.Dispatch<React.SetStateAction<number>>;
+  dcToAcDerateInput : number;
+  setDcToAcDerateInput : React.Dispatch<React.SetStateAction<number>>;
+  solarPanelConfigs : SolarPanelConfig[];
+  defaultPanelCapacityWatts : number;
+}
+
 export interface inputPanelCountProps {
   configId : number | undefined;
   setConfigId: React.Dispatch<React.SetStateAction<number | undefined>>;
@@ -199,6 +214,8 @@ export interface numberInputProps{
   value : number
   setValue : React.Dispatch<React.SetStateAction<number>>
   label : string
-  suffix : string
+  suffix ? : string
+  icon ? : string
+  percentage ? : string
 }
 // [END my_components_data_types]

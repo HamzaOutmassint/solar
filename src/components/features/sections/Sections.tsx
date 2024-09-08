@@ -6,7 +6,6 @@ import styles from "./sections.module.scss"
 
 import BuildingInsightsSection from './buildingInsightsSection/BuildingInsightsSection';
 import DataLayersSection from './dataLayersSection/DataLayersSection';
-import ShowRoofOnly from '../../common/showRoofOnly/ShowRoofOnly';
 // import SolarPotentialSection from './SolarPotentialSection';
 
 

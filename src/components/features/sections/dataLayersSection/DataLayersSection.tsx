@@ -1,7 +1,7 @@
 import { ChevronDown, ChevronUp, Layers } from "lucide-react";
 import DropDown from "../../../common/dropDown/DropDown";
 import styles from "./dataLayersSection.module.scss";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   DataLayersResponse,
   dataLayersSectionProps,
@@ -10,8 +10,10 @@ import {
 } from "../../../../types/solar";
 import { getLayer, Layer } from "../../../../types/layer";
 import { getDataLayerUrls } from "../../../../utils/utils";
-import ShowRoofOnly from "../../../common/showRoofOnly/ShowRoofOnly";
+// import ShowRoofOnly from "../../../common/showRoofOnly/ShowRoofOnly";
 import Loading from "../../../common/loading/Loading";
+import ToggleSwitch from "../../../common/toggleSwitch/ToggleSwitch";
+import Calendar from "../../../common/calendar/Calendar";
 
 const DataLayersSection: React.FC<dataLayersSectionProps> = ({
   showPanels,
@@ -31,26 +33,15 @@ const DataLayersSection: React.FC<dataLayersSectionProps> = ({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [playAnimation, setPlayAnimation] = useState(true);
   const [layer, setLayer] = useState<Layer | undefined>();
+  const [open, setOpen] = useState(false);
   const [month, setMonth] = useState(0);
   const [hour, setHour] = useState(0);
   const [tick, setTick] = useState(0);
   const [day, setDay] = useState(14);
 
+  let intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const monthNames = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
+  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",];
 
   const dataLayerOptions: Record<LayerId | "none", string> = {
     none: "No layer",
@@ -62,23 +53,15 @@ const DataLayersSection: React.FC<dataLayersSectionProps> = ({
     hourlyShade: "Hourly shade",
   };
 
-  // const showRoofOnlyRef = useRef(false);
-
   useEffect(() => {
-    setShowRoofOnly([
-      "mask",
-      "dsm",
-      "annualFlux",
-      "monthlyFlux",
-      "hourlyShade",
-    ].includes(layerId))
+    setShowRoofOnly(["mask", "dsm", "annualFlux", "monthlyFlux", "hourlyShade",].includes(layerId))
   }, [layerId]);
 
   // This effect fetches and updates the layer data
   useEffect(() => {
-    if (layerId === "none"){
-        setIsLoading(false)
-        return
+    if (layerId === "none") {
+      setIsLoading(false)
+      return
     };
 
     setIsLoading(true);
@@ -120,8 +103,8 @@ const DataLayersSection: React.FC<dataLayersSectionProps> = ({
           });
 
           // Wait for the state to update
-          await updatePromise; 
-          updateOverlays(); 
+          await updatePromise;
+          // updateOverlays(); 
         } else {
           updateOverlays(); // Update overlays if layerId changes
         }
@@ -139,8 +122,7 @@ const DataLayersSection: React.FC<dataLayersSectionProps> = ({
   // Function to handle overlay updates
   const updateOverlays = () => {
     if (layer && map) {
-      // Remove previous overlays
-      overlays.forEach((overlay) => overlay.setMap(null));
+      overlays.forEach((overlay) => overlay.setMap(null));  // Remove previous overlays
 
       const bounds = layer.bounds;
 
@@ -149,33 +131,10 @@ const DataLayersSection: React.FC<dataLayersSectionProps> = ({
         .map((canvas) => new google.maps.GroundOverlay(canvas.toDataURL(), bounds));
 
       setOverlays(newOverlays);
-      if (!["monthlyFlux", "hourlyShade"].includes(layer.id)) {
-        newOverlays[0]?.setMap(map);
-      }
     }
   };
 
   useEffect(() => {
-    // if (map && overlays.length > 0) {
-    //   // Remove previous overlays
-    //   overlays.forEach((overlay) => overlay.setMap(null));
-  
-    //   if (["mask", "dsm", "annualFlux", "monthlyFlux", "hourlyShade"].includes(layerId)) {
-    //     if (showRoofOnly) {
-    //       // Show only the first overlay
-    //       overlays[0]?.setMap(map); 
-    //     } else {
-    //       // Show all overlays
-    //       overlays.forEach((overlay) => overlay.setMap(map));
-    //     }
-    //   } else if (layerId === "rgb") {
-    //     // Show all overlays
-    //     overlays.forEach((overlay) => overlay.setMap(map));
-    //   }else if (layerId === "none"){
-    //     // remove all overlays from the map
-    //     overlays.forEach((overlay) => overlay.setMap(null));
-    //   }
-    // }
     if (map && overlays.length > 0) {
       overlays.forEach((overlay) => overlay.setMap(null));
 
@@ -188,7 +147,7 @@ const DataLayersSection: React.FC<dataLayersSectionProps> = ({
       } else if (layerId === "rgb") {
         // Show all overlays
         overlays.forEach((overlay) => overlay.setMap(map));
-      }else if (layerId === "none"){
+      } else if (layerId === "none") {
         // remove all overlays from the map
         overlays.forEach((overlay) => overlay.setMap(null));
       }
@@ -212,18 +171,35 @@ const DataLayersSection: React.FC<dataLayersSectionProps> = ({
   useEffect(() => {
     if (layer?.id === "monthlyFlux") {
       if (playAnimation) {
-        setMonth(tick % 12);
+        intervalRef.current = setInterval(() => {
+          setTick((prevTick) => prevTick + 1);
+          setMonth(tick % 12);
+        }, 1000);
       } else {
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+        }
         setTick(month);
       }
     } else if (layer?.id === "hourlyShade") {
       if (playAnimation) {
-        setHour(tick % 24);
+        intervalRef.current = setInterval(() => {
+          setTick((prevTick) => prevTick + 1);
+          setHour(tick % 24);
+        }, 1000);
       } else {
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+        }
         setTick(hour);
       }
     }
-  }, [tick, month, hour, playAnimation]);
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [tick, month, hour, playAnimation, layer?.id]);
 
   // Handle layer selection
   const handleSelectChange = (value: LayerId) => {
@@ -231,6 +207,7 @@ const DataLayersSection: React.FC<dataLayersSectionProps> = ({
     setLayer(undefined);
     setIsLoading(true);
   };
+
 
   return (
     <div className={styles.accordion}>
@@ -247,29 +224,118 @@ const DataLayersSection: React.FC<dataLayersSectionProps> = ({
         </div>
         <span>monthly sunshine</span>
       </div>
-      <div
-        className={` ${accordionStates ? styles.toggel : ""} ${
-          styles.accordion__content
-        }`}
-      >
+      <div className={` ${accordionStates ? styles.toggel : ""} ${styles.accordion__content}`}>
         <div className={styles.desc}>
           <strong>Data Layers endpoint</strong> provides raw and processed
           imagery and granular details on an area surrounding a location.
         </div>
         <DropDown options={dataLayerOptions} onChange={handleSelectChange} />
 
-        {isLoading 
-        ? 
+        {isLoading
+          ?
           <Loading />
-        : 
+          :
           null
         }
 
-        <ShowRoofOnly 
+        {/* <ShowRoofOnly 
           showRoofOnly={showRoofOnly}
           setShowRoofOnly={setShowRoofOnly}
-        />
+        /> */}
+
+        <div className={styles.dropDown_container}>
+          <button className={styles.options_btn} onClick={() => setOpen(!open)}>options</button>
+          <div className={`${styles.options} ${open ? styles.open : null}`}>
+            <div className={styles.item}>
+              <label>Show Panels</label>
+              <ToggleSwitch
+                state={showPanels}
+                setState={setShowPanels}
+              />
+            </div>
+            {
+              layer?.id === "monthlyFlux" || layer?.id === "hourlyShade"
+                ?
+                <div className={styles.item}>
+                  <label>Play Animation</label>
+                  <ToggleSwitch
+                    state={playAnimation}
+                    setState={setPlayAnimation}
+                  />
+                </div>
+                :
+                null
+            }
+            {
+               layer?.id === "hourlyShade"
+               ?
+                <div className={styles.item}>
+                  <label>Pick a Date</label>
+                  <Calendar
+                    setMonth={setMonth}
+                    setDay={setDay}
+                  />
+                </div>
+               :
+                null
+            }
+          </div>
+        </div>
       </div>
+      {
+        layer?.id === "monthlyFlux" && (
+          <div className={styles.slider}>
+            <input
+              type="range"
+              min={0}
+              max={11}
+              value={month}
+              className={styles.slider_input}
+            />
+            <span> {monthNames[month]} </span>
+          </div>
+        )
+      }
+      {
+        layer !== undefined && (
+          layer.id === 'hourlyShade' && (
+            <div className={styles.slider}>
+              <input
+                type="range"
+                min={0}
+                max={23}
+                value={hour}
+                className={styles.slider_input}
+              />
+              <span className={styles.date}>
+                <span>{monthNames[month]}</span>
+                <span>{day},</span>
+                <span>
+                  {
+                    hour === 0 
+                  ? 
+                    '12am'
+                  : 
+                    hour < 12
+                      ? 
+                        `${hour}am`
+                      : 
+                        hour === 12
+                        ? 
+                          '12pm'
+                        : 
+                          hour < 22
+                          ? 
+                            `${hour - 12}pm`
+                          : 
+                            `${hour - 12}pm`
+                  }
+                </span>
+              </span>
+            </div>
+          )
+        )
+      }
     </div>
   );
 };

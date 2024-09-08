@@ -9,7 +9,7 @@ import InputPanelsCount from "../../../common/inputPanelsCount/InputPanelsCount"
 import { panelsPalette } from "../../../../types/colors";
 import { findClosestBuilding } from "../../../../utils/utils";
 import NumberInput from "../../../common/numberInput/NumberInput";
-import ShowPanels from "./../../../common/showPanels/ShowPanels";
+import ShowPanels from "../../../common/toggleSwitch/ToggleSwitch";
 
 
 const BuildingInsightsSection = ({ 
@@ -151,11 +151,6 @@ const BuildingInsightsSection = ({
                   setValue={setPanelCapacityWatts}
                   label="Panel capacity"
                   suffix="Watts"
-                />
-
-                <ShowPanels 
-                  showPanels={showPanels}
-                  setShowPanels={setShowPanels}
                 />
               </>  
             )

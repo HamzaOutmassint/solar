@@ -180,14 +180,19 @@ export interface inputPanelCountProps {
   solarPanelConfigs : SolarPanelConfig[];
 }
 
-export interface showPanlesProps {
-  showPanels : boolean;
-  setShowPanels : React.Dispatch<React.SetStateAction<boolean>>;
+export interface toggleSwitchProps {
+  state : boolean;
+  setState : React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export interface showRoofOnlyProps {
   showRoofOnly : boolean;
   setShowRoofOnly : React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export interface playAnimationProps {
+  playAnimation : boolean;
+  setPlayAnimation : React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export interface numberInputProps{

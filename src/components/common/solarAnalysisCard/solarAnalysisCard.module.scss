@@ -1,12 +1,13 @@
 
 .solarAnalysisCard{
-    background-color: blue;
-    color: aliceblue;
-    height: 200px;
-    width: 350px;
     position: absolute;
     left: 1rem;
-    top: 1rem;
+    top: 14.5rem;
+    background-color: #fff;
     border-radius: 8px;
-    padding: 8px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 379px;
 }

@@ -12,7 +12,7 @@ const NumberInput = ({value , setValue , label , suffix,icon, percentage}: numbe
         data-icon={icon ? "icon_true" : ""}
         data-percentage={percentage ? "percentage" : ""}
         onChange={(e)=>setValue(
-          percentage ? parseInt(e.target.value) / 100 : parseInt(e.target.value)
+          label === "DC to AC conversion" ? parseInt(e.target.value) / 100 : parseFloat(e.target.value)
         )} 
         value={value}
       />

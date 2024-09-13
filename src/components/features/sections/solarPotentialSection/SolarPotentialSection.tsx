@@ -6,7 +6,7 @@ import NumberInput from "../../../common/numberInput/NumberInput";
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-ignore
 // import { GoogleCharts } from "google-charts";
-// import { Chart } from "react-google-charts";
+import { Chart } from "react-google-charts";
 
 import React, { useEffect, useState, useRef } from "react";
 // import type { SolarPanelConfig } from "../../../../types/solar";
@@ -14,6 +14,7 @@ import { showMoney, showNumber } from './../../../../utils/utils';
 
 import { solarPotentiolSectionProps } from "../../../../types/solar";
 import SummaryCard from "../../../common/summaryCard/SummaryCard";
+import SolarAnalysisCard from "../../../common/solarAnalysisCard/SolarAnalysisCard";
 
 const SolarPotentiolSection: React.FC<solarPotentiolSectionProps> = ({
     configId,
@@ -30,8 +31,8 @@ const SolarPotentiolSection: React.FC<solarPotentiolSectionProps> = ({
     defaultPanelCapacityWatts,
 }) => {
     const [accordionStates, setAccordionStates] = useState(false);
-  const [panelsCount, setPanelsCount] = useState(20);
-  const [yearlyEnergyDcKwh, setYearlyEnergyDcKwh] = useState(12000);
+  const [panelsCount] = useState(20);
+  const [yearlyEnergyDcKwh] = useState(12000);
 
   // Basic settings
   const [solarIncentives, setSolarIncentives] = useState(7000);
@@ -106,6 +107,7 @@ const SolarPotentiolSection: React.FC<solarPotentiolSectionProps> = ({
     setSavings(totalCostWithoutSolar - totalCostWithSolar);
     setEnergyCovered(yearlyProductionAcKwhTemp[0] / yearlyKwhEnergyConsumption);
   }, [initialAcKwhPerYear, installationCostTotal, remainingLifetimeUtilityBill, solarIncentives, yearlyKwhEnergyConsumption, efficiencyDepreciationFactor, costIncreaseFactor, discountRate, installationLifeSpan, totalCostWithoutSolar, totalCostWithSolar, energyCostPerKwhInput, monthlyAverageEnergyBillInput]);
+
 
 //   useEffect(() => {
 //     if (costChart.current) {
@@ -221,16 +223,22 @@ const SolarPotentiolSection: React.FC<solarPotentiolSectionProps> = ({
                   percentage="%"
                 />
                 <NumberInput
+                  value={costIncreaseFactor}
+                  setValue={setCostIncreaseFactor}
+                  label="Energy cost increase per year"
+                  percentage="%"
+                />
+                <NumberInput
                   value={discountRate}
                   setValue={setDiscountRate}
                   label="Discount rate per year"
                   percentage="%"
                 />
-                {/* <SolarAnalysisCard costChartRef={costChart}/> */}
 
                 {
                   accordionStates
                   ?
+                  <>
                     <SummaryCard 
                       rows={[
                         {
@@ -264,10 +272,18 @@ const SolarPotentiolSection: React.FC<solarPotentiolSectionProps> = ({
                         }
                       ]}
                     />
+                      <SolarAnalysisCard 
+                        yearlyCostWithoutSolar={yearlyCostWithoutSolar}
+                        yearlyUtilityBillEstimates={yearlyUtilityBillEstimates}
+                        setBreakEvenYear={setBreakEvenYear}
+                        installationCostTotal={installationCostTotal}
+                        solarIncentives={solarIncentives}
+                        installationLifeSpan={installationLifeSpan}
+                      />
+                  </>
                   :
                       null
                 }
-
             </div>
         </div>
   )

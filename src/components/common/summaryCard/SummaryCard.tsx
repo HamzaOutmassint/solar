@@ -16,6 +16,7 @@ interface summaryCardProps {
 }
 
 const SummaryCard = ({ rows }: summaryCardProps) => {
+  // temporary solution
   const getIcon = (iconName: string) => {
     switch (iconName) {
       case "Leaf":
